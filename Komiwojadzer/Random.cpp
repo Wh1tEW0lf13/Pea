@@ -2,18 +2,18 @@
 // Created by Wh1tEW0lf13 on 15.03.2026.
 //
 
-#include "MonteCarlo.h"
+#include "Random.h"
 #include <random>
 
 #include "Timer.h"
 
-MonteCarlo::MonteCarlo(int ** cities, int size, int numberOfPermutations) {
+Random::Random(int ** cities, int size, int numberOfPermutations) {
     _cities = cities;
     _size = size;
     _numberOfPermutations = numberOfPermutations;
 }
 
-void MonteCarlo::algorythm() {
+void Random::algorythm() {
     Timer timer;
     timer.reset();
     std::random_device rd;
@@ -47,7 +47,7 @@ void MonteCarlo::algorythm() {
         }
     }
     timer.stop();
-    Results results("MonteCarlo", _size, _numberOfPermutations, min, bestPath, timer.getTime());
+    Results results("Random", _size, _numberOfPermutations, min, bestPath, timer.getTime());
     results.saveResultsToFile();
     delete[] currentCity;
 

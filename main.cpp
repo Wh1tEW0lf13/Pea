@@ -3,7 +3,7 @@
 #include <random>
 #include <cstdlib>
 #include "Komiwojadzer/BruteForce.h"
-#include "Komiwojadzer/MonteCarlo.h"
+#include "Komiwojadzer/Random.h"
 #include "Komiwojadzer/NearestNeighbor.h"
 #include "Komiwojadzer/RepetitiveNearestNeighbour.h"
 #include "Komiwojadzer/Results.h"
@@ -26,7 +26,7 @@ int choseAlgorythm(int alg, int size, int** cities, int permutations) {
             break;
         }
         case 3: {
-            MonteCarlo monte_carlo(cities, size, permutations);
+            Random monte_carlo(cities, size, permutations);
             monte_carlo.algorythm();
             break;
         }
@@ -69,12 +69,6 @@ int main(int argc, char *argv[]) {
     }
     if (std::string(argv[1]) == "--showLast") {
         size = getMatrixFromFile(cities, "matrix.txt");
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                std::cout << cities[i][j] << " ";
-            }
-            std::cout << std::endl;
-        }
         for (int i = 0; i < size; i++) {
             delete[] cities[i];
         }

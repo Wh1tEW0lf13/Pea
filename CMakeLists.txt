@@ -11,8 +11,8 @@ add_executable(Project1 main.cpp
         Komiwojadzer/NearestNeighbor.h
         Komiwojadzer/RepetitiveNearestNeighbour.cpp
         Komiwojadzer/RepetitiveNearestNeighbour.h
-        Komiwojadzer/MonteCarlo.cpp
-        Komiwojadzer/MonteCarlo.h
+        Komiwojadzer/Random.cpp
+        Komiwojadzer/Random.h
         Komiwojadzer/Results.cpp
         Komiwojadzer/Results.h
         Komiwojadzer/Timer.cpp

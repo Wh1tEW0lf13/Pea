@@ -7,13 +7,13 @@
 #include "Results.h"
 
 
-class MonteCarlo {
+class Random {
 private:
     int **_cities;
     int _size;
     int _numberOfPermutations;
 public:
-    MonteCarlo(int **cities, int size, int numberOfPermutations);
+    Random(int **cities, int size, int numberOfPermutations);
     void algorythm();
 };
 

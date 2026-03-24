@@ -16,4 +16,4 @@ Wartości dla <algorytm>:
 
 3 = Random
 
-Jeżeli nie wybierzemy algorytmu nr. 3, wtedy nie wpisujemy <permutacje> do pliku startowego. Kończymy na <algorytm>
+Jeżeli nie wybierzemy algorytmu nr. 3, wtedy nie wpisujemy <permutacje> do pliku startowego. Kończymy na `<algorytm>`

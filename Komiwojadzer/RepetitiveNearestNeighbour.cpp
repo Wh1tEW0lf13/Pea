@@ -32,7 +32,7 @@ void RepetitiveNearestNeighbor::findAllPaths(int currentCity, int startCity, boo
             minWeightForStep = _cities[currentCity][j];
         }
     }
-    // Sprawdzamy każdą ścieżkę
+    // Sprawdzamy każdą ścieżkę o tej samej minimalnej wadze
     for (int j = 0; j < _size; j++) {
         if (!visited[j] && _cities[currentCity][j] == minWeightForStep) {
             visited[j] = true;

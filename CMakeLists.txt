@@ -17,4 +17,12 @@ add_executable(Project1 main.cpp
         Komiwojadzer/Results.h
         Komiwojadzer/Timer.cpp
         Komiwojadzer/Timer.h
+        Komiwojadzer/BreadthFirstSearch.cpp
+        Komiwojadzer/BreadthFirstSearch.h
+        Komiwojadzer/Queue.cpp
+        Komiwojadzer/Queue.h
+        Komiwojadzer/Queue.cpp
+        Komiwojadzer/Queue.h
+        Komiwojadzer/BreadthFirstSearch.cpp
+        Komiwojadzer/BreadthFirstSearch.h
 )

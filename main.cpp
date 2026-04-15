@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
 
     while (mode != 0) {
         std::string file_path;
-        std::cout << "\n===============================\n";
+        std::cout<<std::endl;
         std::cout << "1 - Sciezka do pliku\n";
         std::cout << "2 - Wygeneruj dane\n";
         std::cout << "3 - Wyswietl zaladowane dane\n";

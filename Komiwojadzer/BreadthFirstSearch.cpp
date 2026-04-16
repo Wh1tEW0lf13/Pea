@@ -39,8 +39,10 @@ void BreadthFirstSearch::algorythm() {
                 int totalCost = current->matrix[current->vertex][0];
                 if (totalCost < minTourCost) {
                     minTourCost = totalCost;
-                    bestPath = current->visited;
-                    bestPath[]
+                    for (int i = 0; i<N; i++) {
+                        bestPath[i] = current->visited[i];
+                    }
+                    bestPath[N] = 0;
                 }
             }
         }

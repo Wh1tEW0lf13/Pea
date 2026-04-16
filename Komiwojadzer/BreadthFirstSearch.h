@@ -25,6 +25,7 @@ private:
     StateNode* createRootNode(int ** initialMatrix);
     StateNode* createChildNode(StateNode* parent, int from, int to);
     int reduceMatrix(int** matrix);
+    bool isVisited(int* node, int value);
 };
 
 

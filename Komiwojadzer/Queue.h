@@ -11,18 +11,18 @@
 class Queue {
 private:
     struct Node {
-        BreadthFirstSearch::StateNode* data;
+        BreadthFirstSearch::StateNodeQueue* data;
         Node* next;
-        Node(BreadthFirstSearch::StateNode* val);
+        Node(BreadthFirstSearch::StateNodeQueue* val);
     };
     Node* head;
     Node* tail;
 public:
     Queue();
     ~Queue();
-    void enqueue(BreadthFirstSearch::StateNode* val);
+    void enqueue(BreadthFirstSearch::StateNodeQueue* val);
     void dequeue();
-    BreadthFirstSearch::StateNode* front();
+    BreadthFirstSearch::StateNodeQueue* front();
     bool isEmpty();
 
 };

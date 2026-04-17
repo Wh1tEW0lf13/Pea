@@ -29,4 +29,6 @@ add_executable(Project1 main.cpp
         Komiwojadzer/DepthFirstSearch.h
         Komiwojadzer/MatrixOperations.cpp
         Komiwojadzer/MatrixOperations.h
+        Komiwojadzer/Stack.cpp
+        Komiwojadzer/Stack.h
 )

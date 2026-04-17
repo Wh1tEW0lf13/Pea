@@ -11,20 +11,21 @@ class DepthFirstSearch {
 private:
     int _size;
     int **_cities;
-    struct StateNode {
+    int reduceMatrix(int** matrix);
+    bool isVisited(int* path, int vertex);
+public:
+    struct StateNodeStack {
         int **matrix = nullptr;
         int cost;
         int level = 0;
         int vertex;
         int *visited;
     };
-    StateNode* createRootNode(int ** initialMatrix);
-    StateNode* createChildNode(StateNode* parent, int from, int to);
-    int reduceMatrix(int** matrix);
-    bool isVisited(int* path, int vertex);
-public:
     DepthFirstSearch(int **cities, int size);
     void algorythm();
+private:
+    StateNodeStack* createRootNode(int ** initialMatrix);
+    StateNodeStack* createChildNode(StateNodeStack* parent, int from, int to);
 };
 
 

@@ -5,12 +5,66 @@
 #include "DepthFirstSearch.h"
 #include <climits>
 
+#include "Stack.h"
+
 DepthFirstSearch::DepthFirstSearch(int **cities, int size) {
     _cities = cities;
     _size = size;
 }
-DepthFirstSearch::StateNode* DepthFirstSearch::createRootNode(int** initialMatrix) {
-    StateNode* root = new StateNode();
+
+void DepthFirstSearch::algorythm() {
+    Stack* stack = new Stack();
+
+    int minTourCost = INT_MAX;
+    int * bestPath;
+
+    StateNodeStack* root = createRootNode(_cities);
+
+    stack->push(root);
+
+    while (!stack->isEmpty()) {
+        StateNodeStack* current = stack->topNode();
+        stack->pop();
+
+        if (current->cost >= minTourCost) {
+            delete current;
+            continue;
+        }
+
+        int N = _size;
+        if (current->level == N - 1) {
+            int returnCost = current->matrix[current->vertex][0];
+            if (returnCost != INT_MAX) {
+                int totalCost = current->matrix[current->vertex][0];
+                if (totalCost < minTourCost) {
+                    minTourCost = totalCost;
+                    for (int i = 0; i<N; i++) {
+                        bestPath[i] = current->visited[i];
+                    }
+                    bestPath[N] = 0;
+                }
+            }
+        }
+        else {
+            for (int j = 0; j < N; j++)
+            {
+                if (current->matrix[current->vertex][j] != INT_MAX && !isVisited(current->visited, j)){
+                    DepthFirstSearch::StateNodeStack* child = createChildNode(current, current->vertex, j);
+
+                    if (child->cost < minTourCost) {
+                        stack->push(child);
+                    }else {
+                        delete child;
+                    }
+                }
+            }
+        }
+        delete current;
+    }
+}
+
+DepthFirstSearch::StateNodeStack* DepthFirstSearch::createRootNode(int** initialMatrix) {
+    StateNodeStack* root = new StateNodeStack();
     root->visited = new int[_size];
     root->visited[0] = 0;
     root->level = 0;
@@ -22,9 +76,9 @@ DepthFirstSearch::StateNode* DepthFirstSearch::createRootNode(int** initialMatri
     return root;
 }
 
-DepthFirstSearch::StateNode* DepthFirstSearch::createChildNode(DepthFirstSearch::StateNode* parent,
+DepthFirstSearch::StateNodeStack* DepthFirstSearch::createChildNode(DepthFirstSearch::StateNodeStack* parent,
     int from, int to) {
-    StateNode* child = new StateNode;
+    StateNodeStack* child = new StateNodeStack;
 
     child->level = parent->level + 1;
     child->vertex = to;

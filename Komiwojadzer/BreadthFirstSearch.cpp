@@ -16,12 +16,12 @@ void BreadthFirstSearch::algorythm() {
     int minTourCost = INT_MAX;
     int * bestPath;
 
-    StateNode* root = createRootNode(_cities);
+    StateNodeQueue* root = createRootNode(_cities);
 
     queue->enqueue(root);
 
     while (!queue->isEmpty()) {
-        StateNode* current = queue->front();
+        StateNodeQueue* current = queue->front();
         queue->dequeue();
 
         if (current->cost >= minTourCost) {
@@ -47,7 +47,7 @@ void BreadthFirstSearch::algorythm() {
             for (int j = 0; j < N; j++)
             {
                 if (current->matrix[current->vertex][j] != INT_MAX && !isVisited(current->visited, j)){
-                    BreadthFirstSearch::StateNode* child = createChildNode(current, current->vertex, j);
+                    BreadthFirstSearch::StateNodeQueue* child = createChildNode(current, current->vertex, j);
 
                     if (child->cost < minTourCost) {
                         queue->enqueue(child);
@@ -61,8 +61,8 @@ void BreadthFirstSearch::algorythm() {
     }
 }
 
-BreadthFirstSearch::StateNode* BreadthFirstSearch::createRootNode(int** initialMatrix) {
-    StateNode* root = new StateNode();
+BreadthFirstSearch::StateNodeQueue* BreadthFirstSearch::createRootNode(int** initialMatrix) {
+    StateNodeQueue* root = new StateNodeQueue();
     root->visited = new int[_size];
     root->visited[0] = 0;
     root->level = 0;
@@ -74,9 +74,9 @@ BreadthFirstSearch::StateNode* BreadthFirstSearch::createRootNode(int** initialM
     return root;
 }
 
-BreadthFirstSearch::StateNode* BreadthFirstSearch::createChildNode(BreadthFirstSearch::StateNode* parent,
+BreadthFirstSearch::StateNodeQueue* BreadthFirstSearch::createChildNode(BreadthFirstSearch::StateNodeQueue* parent,
     int from, int to) {
-    StateNode* child = new StateNode;
+    StateNodeQueue* child = new StateNodeQueue;
 
     child->level = parent->level + 1;
     child->vertex = to;

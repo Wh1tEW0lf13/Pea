@@ -5,6 +5,8 @@
 #include <string>
 #include <iomanip>
 
+#include "Komiwojadzer/BreadthFirstSearch.h"
+#include "Komiwojadzer/DepthFirstSearch.h"
 #include "Komiwojadzer/BruteForce.h"
 #include "Komiwojadzer/Random.h"
 #include "Komiwojadzer/NearestNeighbor.h"
@@ -48,6 +50,17 @@ int choseAlgorythm(int alg, int size, int** cities, int permutations) {
             monte_carlo.algorythm();
             break;
         }
+        case 4: {
+            BreadthFirstSearch bfs(cities, size);
+            bfs.algorythm();
+            break;
+        }
+        case 5: {
+            DepthFirstSearch dfs(cities, size);
+            dfs.algorythm();
+            break;
+        }
+
         default: {
             std::cout << "Zly algorytm.\n";
             return -1;
@@ -90,7 +103,7 @@ int main(int argc, char *argv[]) {
         std::cout << "1 - Sciezka do pliku\n";
         std::cout << "2 - Wygeneruj dane\n";
         std::cout << "3 - Wyswietl zaladowane dane\n";
-        std::cout << "4 - Wlacz algorytm (0: Brute_force, 1: NN, 2: RNN, 3: Losowy)\n";
+        std::cout << "4 - Wlacz algorytm (0: Brute_force, 1: NN, 2: RNN, 3: Losowy, 4: BFS, 5: DFS)\n";
         std::cout << "5 - Wczytaj ostatnia macierz\n";
         std::cout << "0 - Zakoncz program\n";
         std::cout << "Wybierz mode od 0 do 5: ";

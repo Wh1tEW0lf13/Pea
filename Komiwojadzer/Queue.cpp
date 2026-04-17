@@ -4,7 +4,7 @@
 
 #include "Queue.h"
 
-Queue::Node::Node(BreadthFirstSearch::StateNode* val) : data(val), next(nullptr) {}
+Queue::Node::Node(BreadthFirstSearch::StateNodeQueue* val) : data(val), next(nullptr) {}
 
 Queue::Queue() {
     head = nullptr;
@@ -15,7 +15,7 @@ Queue::~Queue() {
         dequeue();
     }
 }
-void Queue::enqueue(BreadthFirstSearch::StateNode* val) {
+void Queue::enqueue(BreadthFirstSearch::StateNodeQueue* val) {
     Node* newNode = new Node(val);
 
     if (head == nullptr) {
@@ -42,7 +42,7 @@ void Queue::dequeue() {
 
     delete oldHead;
 }
-BreadthFirstSearch::StateNode* Queue::front() {
+BreadthFirstSearch::StateNodeQueue* Queue::front() {
     if (isEmpty()) {
         return nullptr;
     }

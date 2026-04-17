@@ -9,7 +9,7 @@
 
 class BreadthFirstSearch {
 public:
-    struct StateNode {
+    struct StateNodeQueue {
         int **matrix = nullptr;
         int cost;
         int level = 0;
@@ -22,8 +22,8 @@ public:
 private:
     int** _cities;
     int _size;
-    StateNode* createRootNode(int ** initialMatrix);
-    StateNode* createChildNode(StateNode* parent, int from, int to);
+    StateNodeQueue* createRootNode(int ** initialMatrix);
+    StateNodeQueue* createChildNode(StateNodeQueue* parent, int from, int to);
     int reduceMatrix(int** matrix);
     bool isVisited(int* node, int value);
 };

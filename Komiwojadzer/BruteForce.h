@@ -7,7 +7,6 @@
 class BruteForce
 {
 private:
-    // Dodaj te deklaracje do klasy BruteForce
     bool next_permutation_JT(int* citiesToVisit, int* directions, int n);
     int** _cities;
     int _size;

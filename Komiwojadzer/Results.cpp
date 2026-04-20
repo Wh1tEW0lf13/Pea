@@ -6,7 +6,7 @@
 #include <chrono>
 #include <fstream>
 #include <iostream>
-Results::Results(std::string algorythmName, int size, int numberOfPermutations, int minPath, int* minPathVertexes, int time) {
+Results::Results(std::string algorythmName, int size, int numberOfPermutations, int minPath, int* minPathVertexes, long long time) {
     _minPath = minPath;
     _algorithmName = algorythmName;
     _numberOfPermutations = numberOfPermutations;
@@ -21,10 +21,10 @@ int Results::saveResultsToFile() {
         return -1;
     }
     std::cout<<"Path: "<<std::to_string(_minPath)<<'\n';
-    for (int i = 0; i < _size - 1; i++) {
+    for (int i = 0; i < _size; i++) {
         std::cout<<_minPathVertexes[i]<<" -> ";
     }
-    std::cout<<_minPathVertexes[_size - 1]<<'\n';
+    std::cout<<_minPathVertexes[0]<<'\n';
     std::cout<<"Time: "<<std::to_string(_timeResult)<< " us";
     file << _algorithmName +"," + std::to_string(_size) +","+ std::to_string(_numberOfPermutations) +","+ std::to_string(_minPath) + "," + std::to_string(_timeResult) + '\n';
     file.close();

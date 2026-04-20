@@ -13,10 +13,10 @@ class Results {
     int _numberOfPermutations;
     int _minPath;
     int* _minPathVertexes;
-    int _timeResult;
+    long long _timeResult;
 
 public:
-    Results(std::string algorythmName, int size, int numberOfPermutations, int minPath, int* minPathVertexes, int time);
+    Results(std::string algorythmName, int size, int numberOfPermutations, int minPath, int* minPathVertexes, long long time);
     ~Results();
     std::chrono::milliseconds getTime();
     void start();

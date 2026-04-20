@@ -9,7 +9,7 @@
 
 class Timer {
     long long _time;
-    std::chrono::microseconds _start;
+    std::chrono::milliseconds _start;
 public:
     Timer();
     ~Timer();

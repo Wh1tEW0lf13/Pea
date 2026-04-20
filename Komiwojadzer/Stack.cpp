@@ -12,18 +12,16 @@ Stack::Stack() {
 
 Stack::~Stack() {
     while (!isEmpty()) {
-        DepthFirstSearch::StateNodeStack* state = top();
+        DepthFirstSearch::StateNodeStack* state = topNode();
         pop();
-        delete top();
+        delete topNode();
     }
 }
 
 void Stack::push(DepthFirstSearch::StateNodeStack *val) {
-    if (isEmpty()) {
-        Node* newNode = new Node(val);
-        newNode->next = top;
-        top = newNode;
-    }
+    Node* newNode = new Node(val);
+    newNode->next = top;
+    top = newNode;
 }
 
 DepthFirstSearch::StateNodeStack* Stack::topNode() {

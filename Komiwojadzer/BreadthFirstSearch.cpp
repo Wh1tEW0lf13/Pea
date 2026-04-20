@@ -4,6 +4,8 @@
 #include "BreadthFirstSearch.h"
 #include <climits>
 #include "Queue.h"
+#include "Results.h"
+#include "Timer.h"
 
 BreadthFirstSearch::BreadthFirstSearch(int **cities, int size) {
     _cities = cities;
@@ -11,16 +13,23 @@ BreadthFirstSearch::BreadthFirstSearch(int **cities, int size) {
 }
 
 void BreadthFirstSearch::algorythm() {
+    Timer timer;
+    bool pass = true;
+    timer.start();
     Queue* queue = new Queue();
 
     int minTourCost = INT_MAX;
-    int * bestPath;
+    int * bestPath = new int[_size + 1];
 
     StateNodeQueue* root = createRootNode(_cities);
 
     queue->enqueue(root);
 
     while (!queue->isEmpty()) {
+        if (timer.getTime() > 7200) {
+            pass = false;
+            break;
+        }
         StateNodeQueue* current = queue->front();
         queue->dequeue();
 
@@ -31,12 +40,15 @@ void BreadthFirstSearch::algorythm() {
 
         int N = _size;
         if (current->level == N - 1) {
-            int returnCost = current->matrix[current->vertex][0];
-            if (returnCost != INT_MAX) {
-                int totalCost = current->matrix[current->vertex][0];
-                if (totalCost < minTourCost) {
-                    minTourCost = totalCost;
-                    for (int i = 0; i<N; i++) {
+            if (_cities[current->vertex][0] != INT_MAX) {
+                int exactTotalCost = 0;
+                for (int i = 0; i < N - 1; i++) {
+                    exactTotalCost += _cities[current->visited[i]][current->visited[i+1]];
+                }
+                exactTotalCost += _cities[current->vertex][0];
+                if (exactTotalCost < minTourCost) {
+                    minTourCost = exactTotalCost;
+                    for (int i = 0; i < N; i++) {
                         bestPath[i] = current->visited[i];
                     }
                     bestPath[N] = 0;
@@ -46,8 +58,8 @@ void BreadthFirstSearch::algorythm() {
         else {
             for (int j = 0; j < N; j++)
             {
-                if (current->matrix[current->vertex][j] != INT_MAX && !isVisited(current->visited, j)){
-                    BreadthFirstSearch::StateNodeQueue* child = createChildNode(current, current->vertex, j);
+                if (current->matrix[current->vertex][j] != INT_MAX && !isVisited(current->visited, j, current->level)) {
+                    StateNodeQueue* child = createChildNode(current, current->vertex, j);
 
                     if (child->cost < minTourCost) {
                         queue->enqueue(child);
@@ -59,6 +71,10 @@ void BreadthFirstSearch::algorythm() {
         }
         delete current;
     }
+    delete queue;
+    timer.stop();
+    Results results("BFS", _size, pass, minTourCost, bestPath, timer.getTime());
+    results.saveResultsToFile();
 }
 
 BreadthFirstSearch::StateNodeQueue* BreadthFirstSearch::createRootNode(int** initialMatrix) {
@@ -67,14 +83,20 @@ BreadthFirstSearch::StateNodeQueue* BreadthFirstSearch::createRootNode(int** ini
     root->visited[0] = 0;
     root->level = 0;
     root->vertex = 0;
-    root->matrix = initialMatrix;
+    root->matrix = new int*[_size];
+    for (int i = 0; i < _size; i++) {
+        root->matrix[i] = new int[_size];
+        for (int j = 0; j < _size; j++) {
+            root->matrix[i][j] = initialMatrix[i][j];
+        }
+    }
 
     root->cost = reduceMatrix(root->matrix);
 
     return root;
 }
 
-BreadthFirstSearch::StateNodeQueue* BreadthFirstSearch::createChildNode(BreadthFirstSearch::StateNodeQueue* parent,
+BreadthFirstSearch::StateNodeQueue* BreadthFirstSearch::createChildNode(StateNodeQueue* parent,
     int from, int to) {
     StateNodeQueue* child = new StateNodeQueue;
 
@@ -82,20 +104,20 @@ BreadthFirstSearch::StateNodeQueue* BreadthFirstSearch::createChildNode(BreadthF
     child->vertex = to;
 
     child->visited = new int[_size + 1];
-    for (int i = 0; i < parent->level; i++) {
+    for (int i = 0; i <= parent->level; i++) {
         child->visited[i] = parent->visited[i];
     }
-    child->visited[parent->level] = to;
+    child->visited[parent->level + 1] = to;
 
     child->matrix = new int*[_size];
     for (int i = 0; i < _size; i++) {
         child->matrix[i] = new int[_size];
-        for (int j = 0; j< _size; j++) {
+        for (int j = 0; j < _size; j++) {
             child->matrix[i][j] = parent->matrix[i][j];
         }
     }
 
-    for (int k = 0; k < parent->level; k++) {
+    for (int k = 0; k < _size; k++) {
         child->matrix[from][k] = INT_MAX;
         child->matrix[k][to] = INT_MAX;
     }
@@ -138,9 +160,6 @@ int BreadthFirstSearch::reduceMatrix(int **matrix) {
         }
         if (minCol != INT_MAX && minCol > 0) {
             reducedCost += minCol;
-        }
-        if (minCol != INT_MAX && minCol > 0) {
-            reducedCost += minCol;
             for (int i = 0; i < N; i++) {
                 if (matrix[i][j] != INT_MAX) {
                     matrix[i][j] -= minCol;
@@ -151,8 +170,8 @@ int BreadthFirstSearch::reduceMatrix(int **matrix) {
     return reducedCost;
 }
 
-bool BreadthFirstSearch::isVisited(int* path, int vertex) {
-    for (int i = 0; i < _size; i++) {
+bool BreadthFirstSearch::isVisited(int* path, int vertex, int current_level) {
+    for (int i = 0; i <= current_level; i++) {
         if (path[i] == vertex)
             return true;
     }

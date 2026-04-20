@@ -18,14 +18,14 @@ public:
     };
     BreadthFirstSearch(int** cities, int size);
     void algorythm();
-    ~BreadthFirstSearch();
+    ~BreadthFirstSearch() = default;
 private:
     int** _cities;
     int _size;
     StateNodeQueue* createRootNode(int ** initialMatrix);
     StateNodeQueue* createChildNode(StateNodeQueue* parent, int from, int to);
     int reduceMatrix(int** matrix);
-    bool isVisited(int* node, int value);
+    bool isVisited(int* node, int value, int current_level);
 };
 
 

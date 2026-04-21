@@ -1,6 +1,5 @@
 //
 // Created by Wh1tEW0lf13 on 15.04.2026.
-// Wersja: Algorytm Little'a (Branch and Bound oparty na krawędziach)
 //
 
 #include "BestFirstSearch.h" // Upewnij się, że zmienisz nazwę pliku nagłówkowego
@@ -13,25 +12,28 @@ BestFirstSearch::BestFirstSearch(int **cities, int size) {
     _cities = cities;
     _size = size;
 }
-
 void BestFirstSearch::algorythm() {
+    const int MAX_QUEUE_NODES = 20000000;
+    int currentQueueSize = 0;
     Timer timer;
     bool pass = true;
     timer.start();
     PriorityQueue* pq = new PriorityQueue();
-    int minTourCost = INT_MAX;
     int* bestPath = new int[_size + 1]();
+    int minTourCost = INT_MAX;
 
     StateNodeQueue* root = createRootNode(_cities);
     pq->enqueue(root);
+    currentQueueSize ++;
 
     while (!pq->isEmpty()) {
-        if (timer.getTime() > 7200) {
+        if (timer.getCurrentTime() > 240000000 || currentQueueSize > MAX_QUEUE_NODES) {
             pass = false;
             break;
         }
         StateNodeQueue* current = pq->front();
         pq->dequeue();
+        currentQueueSize --;
 
         // Odcięcie (Pruning)
         if (current->cost >= minTourCost) {
@@ -49,7 +51,7 @@ void BestFirstSearch::algorythm() {
             continue;
         }
 
-        // KROK 1: Obliczanie kar (penalty) dla zer i wybór krawędzi do podziału
+        //Obliczanie kar dla zer i wybór krawędzi do podziału
         int maxPenalty = -1;
         int branchU = -1;
         int branchV = -1;
@@ -92,18 +94,20 @@ void BestFirstSearch::algorythm() {
         }
 
 
-        // KROK 2: Tworzenie lewego dziecka (UŻYWAMY krawędzi branchU -> branchV)
+        // Tworzenie lewego dziecka (UŻYWAMY krawędzi branchU -> branchV)
         StateNodeQueue* withEdgeNode = createNodeWithEdge(current, branchU, branchV);
         if (withEdgeNode->cost < minTourCost) {
             pq->enqueue(withEdgeNode);
+            currentQueueSize++;
         } else {
             delete withEdgeNode;
         }
 
-        // KROK 3: Tworzenie prawego dziecka (NIE używamy krawędzi branchU -> branchV)
+        //Tworzenie prawego dziecka (NIE używamy krawędzi branchU -> branchV)
         StateNodeQueue* withoutEdgeNode = createNodeWithoutEdge(current, branchU, branchV);
         if (withoutEdgeNode->cost < minTourCost) {
             pq->enqueue(withoutEdgeNode);
+            currentQueueSize++;
         } else {
             delete withoutEdgeNode;
         }
@@ -117,7 +121,7 @@ void BestFirstSearch::algorythm() {
 
     delete[] bestPath;
 }
-
+//Zapisywanie macierzy początkowej do root
 BestFirstSearch::StateNodeQueue* BestFirstSearch::createRootNode(int** initialMatrix) {
     StateNodeQueue* root = new StateNodeQueue();
     root->size = _size;

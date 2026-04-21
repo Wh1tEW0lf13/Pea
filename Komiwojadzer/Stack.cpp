@@ -12,9 +12,7 @@ Stack::Stack() {
 
 Stack::~Stack() {
     while (!isEmpty()) {
-        DepthFirstSearch::StateNodeStack* state = topNode();
         pop();
-        delete topNode();
     }
 }
 

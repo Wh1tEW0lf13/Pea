@@ -14,14 +14,17 @@ long long Timer::getTime() {
 }
 
 void Timer::start() {
-    _start = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+    _start = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch());
 }
 void Timer::stop() {
-    std::chrono::milliseconds stop = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-    std::chrono::milliseconds result = stop - _start;
+    std::chrono::microseconds stop = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch());
+    std::chrono::microseconds result = stop - _start;
     _time = result.count();
 }
-
+long long Timer::getCurrentTime() {
+    std::chrono::microseconds result = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()) - _start;
+    return result.count();
+}
 void Timer::reset() {
-    _start = std::chrono::milliseconds(0);
+    _start = std::chrono::microseconds(0);
 }

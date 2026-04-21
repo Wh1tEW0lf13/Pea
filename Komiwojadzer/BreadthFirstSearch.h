@@ -26,6 +26,8 @@ private:
     StateNodeQueue* createChildNode(StateNodeQueue* parent, int from, int to);
     int reduceMatrix(int** matrix);
     bool isVisited(int* node, int value, int current_level);
+    void freeNode(StateNodeQueue* node);
+    int calculateInitialBoundNN(int* initialBestPath);
 };
 
 

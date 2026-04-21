@@ -42,7 +42,6 @@ public:
     };
 private:
     StateNodeQueue* createRootNode(int ** initialMatrix);
-    StateNodeQueue* createChildNode(StateNodeQueue* parent, int from, int to);
     StateNodeQueue* createNodeWithEdge(StateNodeQueue* parent, int u, int v);
     StateNodeQueue* createNodeWithoutEdge(StateNodeQueue* parent, int u, int v);
     void buildPathFromEdges(Edge* edges, int* bestPath);

@@ -19,24 +19,28 @@ void DepthFirstSearch::algorythm() {
     Timer timer;
     timer.start();
     Stack* stack = new Stack();
+    int currentQueueSize = 0;
+    const int MAX_QUEUE_NODES = 10000000;
 
+    int * bestPath = new int[_size + 1]();
     int minTourCost = INT_MAX;
-    int * bestPath = new int[_size + 1];
+
 
     StateNodeStack* root = createRootNode(_cities);
 
     stack->push(root);
-
+    currentQueueSize ++;
     while (!stack->isEmpty()) {
-        if (timer.getTime() > 7200) {
+        if (timer.getCurrentTime() > 240000000 || currentQueueSize > MAX_QUEUE_NODES) {
             pass = false;
             break;
         }
         StateNodeStack* current = stack->topNode();
         stack->pop();
+        currentQueueSize --;
 
         if (current->cost >= minTourCost) {
-            delete current;
+            freeNode(current);
             continue;
         }
 
@@ -65,18 +69,25 @@ void DepthFirstSearch::algorythm() {
 
                     if (child->cost < minTourCost) {
                         stack->push(child);
+                        currentQueueSize ++;
                     }else {
-                        delete child;
+                        freeNode(child);
                     }
                 }
             }
         }
-        delete current;
+        freeNode(current);
+    }
+    while (!stack->isEmpty()) {
+        StateNodeStack* remainingNode = stack->topNode();
+        stack->pop();
+        freeNode(remainingNode);
     }
     delete stack;
     timer.stop();
     Results results("DFS", _size, pass, minTourCost, bestPath, timer.getTime());
     results.saveResultsToFile();
+    delete[] bestPath;
 }
 
 DepthFirstSearch::StateNodeStack* DepthFirstSearch::createRootNode(int** initialMatrix) {
@@ -178,4 +189,22 @@ bool DepthFirstSearch::isVisited(int* path, int vertex, int current_level) {
             return true;
     }
     return false;
+}
+
+void DepthFirstSearch::freeNode(StateNodeStack* node) {
+    if (node == nullptr) return;
+
+    // Usuwanie tablicy visited
+    delete[] node->visited;
+
+    // Usuwanie macierzy
+    if (node->matrix != nullptr) {
+        for (int i = 0; i < _size; i++) {
+            delete[] node->matrix[i];
+        }
+        delete[] node->matrix;
+    }
+
+    // Na koniec usuwamy sam węzeł
+    delete node;
 }

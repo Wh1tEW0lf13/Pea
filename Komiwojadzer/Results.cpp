@@ -25,7 +25,7 @@ int Results::saveResultsToFile() {
         std::cout<<_minPathVertexes[i]<<" -> ";
     }
     std::cout<<_minPathVertexes[0]<<'\n';
-    std::cout<<"Time: "<<std::to_string(_timeResult)<< " us";
+    std::cout<<"Time: "<<std::to_string(_timeResult)<< " ms";
     file << _algorithmName +"," + std::to_string(_size) +","+ std::to_string(_numberOfPermutations) +","+ std::to_string(_minPath) + "," + std::to_string(_timeResult) + '\n';
     file.close();
     return 1;

@@ -6,35 +6,86 @@
 #include "Queue.h"
 #include "Results.h"
 #include "Timer.h"
+#include <iostream>
 
 BreadthFirstSearch::BreadthFirstSearch(int **cities, int size) {
     _cities = cities;
     _size = size;
 }
+int BreadthFirstSearch::calculateInitialBoundNN(int* initialBestPath) {
+    bool* visited = new bool[_size](); // Inicjalizacja zerami (false)
+    int currentCity = 0;
+    visited[currentCity] = true;
+    initialBestPath[0] = currentCity;
+    int totalCost = 0;
+
+    for (int step = 1; step < _size; step++) {
+        int nearestCity = -1;
+        int minDistance = INT_MAX;
+
+        // Szukamy najbliższego nieodwiedzonego sąsiada
+        for (int nextCity = 0; nextCity < _size; nextCity++) {
+            if (!visited[nextCity] &&
+                _cities[currentCity][nextCity] != INT_MAX &&
+                _cities[currentCity][nextCity] < minDistance) {
+
+                minDistance = _cities[currentCity][nextCity];
+                nearestCity = nextCity;
+                }
+        }
+
+        // Jeśli udało się znaleźć ścieżkę
+        if (nearestCity != -1) {
+            totalCost += minDistance;
+            visited[nearestCity] = true;
+            currentCity = nearestCity;
+            initialBestPath[step] = currentCity;
+        } else {
+            // Graf niespójny lub brak przejścia - bezpieczny fallback
+            delete[] visited;
+            return INT_MAX;
+        }
+    }
+
+    // Powrót do miasta startowego
+    if (_cities[currentCity][0] != INT_MAX) {
+        totalCost += _cities[currentCity][0];
+        initialBestPath[_size] = 0;
+    } else {
+        delete[] visited;
+        return INT_MAX; // Bezpieczny fallback
+    }
+
+    delete[] visited;
+    return totalCost;
+}
 
 void BreadthFirstSearch::algorythm() {
+    const int MAX_QUEUE_NODES = 20000000;
+    int currentQueueSize = 0;
     Timer timer;
     bool pass = true;
     timer.start();
     Queue* queue = new Queue();
 
-    int minTourCost = INT_MAX;
-    int * bestPath = new int[_size + 1];
+    int * bestPath = new int[_size + 1]();
+    int minTourCost = calculateInitialBoundNN(bestPath);
 
     StateNodeQueue* root = createRootNode(_cities);
 
     queue->enqueue(root);
-
+    currentQueueSize ++;
     while (!queue->isEmpty()) {
-        if (timer.getTime() > 7200) {
+        if (timer.getCurrentTime() > 240000000 || currentQueueSize > MAX_QUEUE_NODES) {
             pass = false;
             break;
         }
         StateNodeQueue* current = queue->front();
         queue->dequeue();
+        currentQueueSize --;
 
         if (current->cost >= minTourCost) {
-            delete current;
+            freeNode(current);
             continue;
         }
 
@@ -63,14 +114,21 @@ void BreadthFirstSearch::algorythm() {
 
                     if (child->cost < minTourCost) {
                         queue->enqueue(child);
+                        currentQueueSize ++;
                     }else {
-                        delete child;
+                        freeNode(child);
                     }
                 }
             }
         }
-        delete current;
+        freeNode(current);
     }
+    while (!queue->isEmpty()) {
+        StateNodeQueue* remainingNode = queue->front();
+        queue->dequeue();
+        freeNode(remainingNode);
+    }
+
     delete queue;
     timer.stop();
     Results results("BFS", _size, pass, minTourCost, bestPath, timer.getTime());
@@ -176,4 +234,22 @@ bool BreadthFirstSearch::isVisited(int* path, int vertex, int current_level) {
             return true;
     }
     return false;
+}
+
+void BreadthFirstSearch::freeNode(StateNodeQueue* node) {
+    if (node == nullptr) return;
+
+    // Usuwanie tablicy visited
+    delete[] node->visited;
+
+    // Usuwanie macierzy
+    if (node->matrix != nullptr) {
+        for (int i = 0; i < _size; i++) {
+            delete[] node->matrix[i];
+        }
+        delete[] node->matrix;
+    }
+
+    // Na koniec usuwamy sam węzeł
+    delete node;
 }

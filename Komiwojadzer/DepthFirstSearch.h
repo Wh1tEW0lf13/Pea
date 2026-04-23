@@ -1,35 +1,25 @@
-//
-// Created by Wh1tEW0lf13 on 16.04.2026.
-//
+#ifndef TSPSOLVER_H
+#define TSPSOLVER_H
 
-#ifndef DEPTHFIRSTSEARCH_H
-#define DEPTHFIRSTSEARCH_H
-
-
+#include <climits>
 
 class DepthFirstSearch {
 private:
-    int _size;
-    int **_cities;
+    int N;
+    int minTotalCost;
+    int* bestPath;
+    int** _initialMatrix;
+    const int INF = INT_MAX;
+
+    void copyMatrix(int** src, int** dest);
     int reduceMatrix(int** matrix);
-    bool isVisited(int* path, int vertex, int current_level);
+    void solveRecursive(int** currentMatrix, int currentBound, int currentVertex, int level, int* currentPath);
 public:
-    struct StateNodeStack {
-        int **matrix = nullptr;
-        int cost;
-        int level = 0;
-        int vertex;
-        int *visited;
-    };
-    DepthFirstSearch(int **cities, int size);
-    ~DepthFirstSearch() = default;
-    void algorythm();
-private:
-    StateNodeStack* createRootNode(int ** initialMatrix);
-    StateNodeStack* createChildNode(StateNodeStack* parent, int from, int to);
-    void freeNode(StateNodeStack* node);
+
+    DepthFirstSearch(int size, int **initialMatrix);
+    ~DepthFirstSearch();
+
+    void algorithm();
 };
 
-
-
-#endif //DEPTHFIRSTSEARCH_H
+#endif // TSPSOLVER_H

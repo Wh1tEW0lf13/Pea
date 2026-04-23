@@ -13,8 +13,9 @@
 #include "Komiwojadzer/NearestNeighbor.h"
 #include "Komiwojadzer/RepetitiveNearestNeighbour.h"
 #include "Komiwojadzer/Results.h"
+using namespace std;
 
-void freeMatrix(int**& matrix, int size) {
+void freeMatrix(int **&matrix, int size) {
     if (matrix != nullptr) {
         for (int i = 0; i < size; i++) {
             delete[] matrix[i];
@@ -24,7 +25,7 @@ void freeMatrix(int**& matrix, int size) {
     }
 }
 
-int choseAlgorythm(int alg, int size, int** cities, int permutations) {
+int choseAlgorythm(int alg, int size, int **cities, int permutations) {
     if (cities == nullptr) {
         std::cout << "Blad: Brak zaladowanych danych!\n";
         return -1;
@@ -57,8 +58,8 @@ int choseAlgorythm(int alg, int size, int** cities, int permutations) {
             break;
         }
         case 5: {
-            DepthFirstSearch dfs(cities, size);
-            dfs.algorythm();
+            DepthFirstSearch dfs(size, cities);
+            dfs.algorithm();
             break;
         }
         case 6: {
@@ -75,7 +76,7 @@ int choseAlgorythm(int alg, int size, int** cities, int permutations) {
     return 1;
 }
 
-int getMatrixFromFile(int**& matrix, std::string filePath) {
+int getMatrixFromFile(int **&matrix, std::string filePath) {
     std::ifstream file(filePath);
     if (!file.is_open()) {
         std::cout << "Blad: Nie mozna otworzyc pliku " << filePath << "!\n";
@@ -84,11 +85,13 @@ int getMatrixFromFile(int**& matrix, std::string filePath) {
 
     int new_size = 0;
     file >> new_size;
-    matrix = new int*[new_size];
+    matrix = new int *[new_size];
     for (int i = 0; i < new_size; i++) {
         matrix[i] = new int[new_size];
         for (int j = 0; j < new_size; j++) {
-            file >> matrix[i][j];
+            int val;
+            file >> val;
+            matrix[i][j] = (val == -1) ? INT_MAX : val;
         }
     }
     file.close();
@@ -97,12 +100,11 @@ int getMatrixFromFile(int**& matrix, std::string filePath) {
 }
 
 int main(int argc, char *argv[]) {
-    int** cities = nullptr;
+    int **cities = nullptr;
     int size = 0;
     int permutations = -1;
     int alg = -1;
     int mode = -1;
-
     while (mode != 0) {
         std::string file_path;
         std::cout<<std::endl;
